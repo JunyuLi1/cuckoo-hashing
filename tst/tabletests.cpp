@@ -41,6 +41,7 @@ TEST_CASE("Table:MultiInsert:ExpectInTableAndUnchangedCapacity",
     REQUIRE(wordSet.contains("happy"));
     REQUIRE(wordSet.contains("dopey"));
     REQUIRE(wordSet.capacity() == 11);
+    REQUIRE(wordSet.size()==8);
 }
 
 // this test case is not required, in the sense
@@ -76,6 +77,7 @@ TEST_CASE("Table:MultiInsertWithResize:ExpectInTableAndResizedTable",
     REQUIRE(wordSet.contains("monday"));
     REQUIRE(wordSet.contains("sunday"));
     REQUIRE(wordSet.capacity() == 23);
+    REQUIRE(wordSet.size()==19);
 }
 
 }  // namespace

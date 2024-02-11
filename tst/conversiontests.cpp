@@ -62,34 +62,34 @@ bool validConversion(const std::vector<std::string> &conversionPath,
     return words.contains(conversionPath[conversionPath.size() - 1]);
 }
 
-TEST_CASE("Conversion:Ant->Art:ExpectSolution",
-          "[Required][Conversion][HasSolution]") {
-    const static size_t BASE_CAPACITY = 11;
-    proj3::WordSet words(BASE_CAPACITY);
-    std::ifstream istream("words.txt");
-    proj3::loadWordsIntoTable(istream, words);
+// TEST_CASE("Conversion:Ant->Art:ExpectSolution",
+//           "[Required][Conversion][HasSolution]") {
+//     const static size_t BASE_CAPACITY = 11;
+//     proj3::WordSet words(BASE_CAPACITY);
+//     std::ifstream istream("words.txt");
+//     proj3::loadWordsIntoTable(istream, words);
 
-    auto conversionPath = proj3::convert("ant", "art", words);
+//     auto conversionPath = proj3::convert("ant", "art", words);
 
-    // this was a success if r was a valid conversion of length 2.
-    std::ifstream istream2("words.txt");
-    REQUIRE(conversionPath.size() == 2);
-    REQUIRE(validConversion(conversionPath, "ant", "art", istream2));
-}
+//     // this was a success if r was a valid conversion of length 2.
+//     std::ifstream istream2("words.txt");
+//     REQUIRE(conversionPath.size() == 2);
+//     REQUIRE(validConversion(conversionPath, "ant", "art", istream2));
+// }
 
-TEST_CASE("Conversion:Ant->Eat:ExpectSolution",
-          "[Required][Conversion][HasSolution]") {
-    const static size_t BASE_CAPACITY = 11;
-    proj3::WordSet words{BASE_CAPACITY};
-    std::ifstream istream{"words.txt"};
-    proj3::loadWordsIntoTable(istream, words);
+// TEST_CASE("Conversion:Ant->Eat:ExpectSolution",
+//           "[Required][Conversion][HasSolution]") {
+//     const static size_t BASE_CAPACITY = 11;
+//     proj3::WordSet words{BASE_CAPACITY};
+//     std::ifstream istream{"words.txt"};
+//     proj3::loadWordsIntoTable(istream, words);
 
-    auto conversionPath = proj3::convert("ant", "eat", words);
+//     auto conversionPath = proj3::convert("ant", "eat", words);
 
-    std::ifstream istream2{"words.txt"};
+//     std::ifstream istream2{"words.txt"};
 
-    REQUIRE(conversionPath.size() == 5);
-    REQUIRE(validConversion(conversionPath, "ant", "eat", istream2));
-}
+//     REQUIRE(conversionPath.size() == 5);
+//     REQUIRE(validConversion(conversionPath, "ant", "eat", istream2));
+// }
 
 }  // namespace

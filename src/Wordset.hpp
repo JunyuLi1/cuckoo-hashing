@@ -1,7 +1,9 @@
 #ifndef __WORD_SET___HPP
 #define __WORD_SET___HPP
 
+#include <cstddef>
 #include <string>
+#include <cmath>
 
 namespace shindler::ics46::project3 {
 
@@ -27,7 +29,10 @@ template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 class BaseWordSet {
    private:
     // You may declare private functions and member variables here.
-
+    size_t num_string;
+    size_t num_capacity;
+    std::string *uppertable;
+    std::string *lowertable;
    public:
     explicit BaseWordSet(size_t initialCapacity);
     ~BaseWordSet();
@@ -69,48 +74,113 @@ using WordSet =
     BaseWordSet<_impl::BASE_H1, _impl::BASE_H2, _impl::BASE_EVICTION_THRESHOLD>;
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
-BaseWordSet<H1, H2, EvictThreshold>::BaseWordSet(size_t initialCapacity) {
-    // TODO: Implement this
+BaseWordSet<H1, H2, EvictThreshold>::BaseWordSet(size_t initialCapacity):num_string(0), num_capacity(initialCapacity), 
+      uppertable(new std::string[initialCapacity]), 
+      lowertable(new std::string[initialCapacity]){
+
 }
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 BaseWordSet<H1, H2, EvictThreshold>::~BaseWordSet() {
-    // TODO: Implement this
+    delete[] uppertable;
+    delete[] lowertable;
 }
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 void BaseWordSet<H1, H2, EvictThreshold>::insert(const std::string &string) {
-    // TODO: Implement this
+    if(contains(string))
+    {return;}
+    std::string temp = string;
+    unsigned int evictCount = 0;
+    while(evictCount<EvictThreshold){
+        size_t hash1 = polynomialHashFunction(temp, H1, num_capacity);
+        if (uppertable[hash1].empty()){
+            uppertable[hash1] = temp;
+            num_string++;
+            return;
+        }
+        std::swap(temp, uppertable[hash1]);
+        evictCount++;
+        size_t hash2 = polynomialHashFunction(temp, H2, num_capacity);
+        if(lowertable[hash2].empty()){
+            lowertable[hash2] = temp;
+            num_string++;
+            return;
+        }
+        std::swap(temp, lowertable[hash2]);
+        evictCount++;
+    }
+    //rehash
+    size_t candidate  = 2*num_capacity;
+    while(true){
+        bool isPrime = true;
+        for (int i = 2; i <= std::sqrt(candidate); ++i) {
+            if (candidate % i == 0) {
+                isPrime = false;
+                break;
+            }
+        }
+        if(isPrime){
+            break;
+        }
+        ++candidate;
+    }
+    std::string* new_uppertable = new std::string[candidate];
+    std::string* new_lowertable = new std::string[candidate];
+    std::swap(new_uppertable, uppertable);
+    std::swap(new_lowertable, lowertable);
+    size_t temp_size = num_capacity;
+    num_capacity = candidate;
+    num_string=0;
+    for(size_t i = 0; i<temp_size; ++i){
+        if(!new_uppertable[i].empty())
+        {insert(new_uppertable[i]);}
+        if(!new_lowertable[i].empty())
+        {insert(new_lowertable[i]);}
+    }
+    delete[] new_uppertable;
+    delete[] new_lowertable;
+    //insert new
+    insert(temp);
 }
 
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 bool BaseWordSet<H1, H2, EvictThreshold>::contains(
     const std::string &string) const {
-    // TODO: Implement this. Stub is only to allow code to compile
-    //       (you may remove it)
-    return {};
+    size_t hash1 = polynomialHashFunction(string, H1, num_capacity);
+    if(uppertable[hash1]==string)
+    {
+        return true;
+    }
+    size_t hash2 = polynomialHashFunction(string, H2, num_capacity);
+    return lowertable[hash2]==string;
 }
 
 // return how many distinct strings are in the set
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 size_t BaseWordSet<H1, H2, EvictThreshold>::size() const noexcept {
-    // TODO: Implement this. Stub is only to allow code to compile
-    //       (you may remove it)
-    return {};
+    return num_string;
 }
 
 // return how large the underlying array is.
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 size_t BaseWordSet<H1, H2, EvictThreshold>::capacity() const noexcept {
-    // TODO: Implement this. Stub is only to allow code to compile
-    //       (you may remove it)
-    return {};
+    return num_capacity;
 }
 
 // removes this word if it is in the wordset.
 template <unsigned int H1, unsigned int H2, unsigned int EvictThreshold>
 void BaseWordSet<H1, H2, EvictThreshold>::erase(const std::string &string) {
-    // TODO: Implement this.
+    size_t hash1 = polynomialHashFunction(string, H1, num_capacity);
+    if(uppertable[hash1]==string)
+    {
+        uppertable[hash1]="";
+    }
+    size_t hash2 = polynomialHashFunction(string, H2, num_capacity);
+    if(lowertable[hash2]==string)
+    {
+        lowertable[hash2]="";
+    }
 }
 
 }  // namespace shindler::ics46::project3
