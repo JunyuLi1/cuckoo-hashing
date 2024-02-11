@@ -181,6 +181,7 @@ void BaseWordSet<H1, H2, EvictThreshold>::erase(const std::string &string) {
     {
         lowertable[hash2]="";
     }
+    num_string--;
 }
 
 }  // namespace shindler::ics46::project3

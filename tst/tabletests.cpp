@@ -78,6 +78,9 @@ TEST_CASE("Table:MultiInsertWithResize:ExpectInTableAndResizedTable",
     REQUIRE(wordSet.contains("sunday"));
     REQUIRE(wordSet.capacity() == 23);
     REQUIRE(wordSet.size()==19);
+    wordSet.erase("happy");
+    REQUIRE_FALSE(wordSet.contains("happy"));
+    REQUIRE(wordSet.size()==18);
 }
 
 }  // namespace
