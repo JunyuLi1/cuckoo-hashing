@@ -101,6 +101,10 @@ void BaseWordSet<H1, H2, EvictThreshold>::insert(const std::string &string) {
         }
         std::swap(temp, uppertable[hash1]);
         evictCount++;
+        if(evictCount==EvictThreshold)
+        {
+            break;
+        }
         size_t hash2 = polynomialHashFunction(temp, H2, num_capacity);
         if(lowertable[hash2].empty()){
             lowertable[hash2] = temp;

@@ -83,4 +83,21 @@ TEST_CASE("Table:MultiInsertWithResize:ExpectInTableAndResizedTable",
     REQUIRE(wordSet.size()==18);
 }
 
+TEST_CASE("ResolvesAtFourEvictions",
+          "[Additional][Table][Insert]") {
+    const static size_t INITIAL_CAPACITY = 11;
+    proj3::WordSet wordSet(INITIAL_CAPACITY);
+    wordSet.insert("a");
+    wordSet.insert("hc");
+    wordSet.insert("b");
+    wordSet.insert("hd");
+    wordSet.insert("c");
+    wordSet.erase("c");
+    REQUIRE(wordSet.size() == 4);
+    REQUIRE(wordSet.capacity() == 11);
+    wordSet.insert("hb");
+    REQUIRE(wordSet.size() == 5);
+    REQUIRE(wordSet.capacity() == 11);
+}
+
 }  // namespace
