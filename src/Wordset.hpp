@@ -179,13 +179,14 @@ void BaseWordSet<H1, H2, EvictThreshold>::erase(const std::string &string) {
     if(uppertable[hash1]==string)
     {
         uppertable[hash1]="";
+        num_string--;
     }
     size_t hash2 = polynomialHashFunction(string, H2, num_capacity);
     if(lowertable[hash2]==string)
     {
         lowertable[hash2]="";
+        num_string--;
     }
-    num_string--;
 }
 
 }  // namespace shindler::ics46::project3

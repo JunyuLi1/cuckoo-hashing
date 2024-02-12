@@ -100,4 +100,57 @@ TEST_CASE("ResolvesAtFourEvictions",
     REQUIRE(wordSet.capacity() == 11);
 }
 
+TEST_CASE("Table:DupliateInsert", "[Extra][Table][Insert]") {
+    const static size_t INITIAL_CAPACITY = 11;
+    proj3::WordSet wordSet(INITIAL_CAPACITY);
+    wordSet.insert("dbc");
+    REQUIRE(wordSet.contains("dbc"));
+    REQUIRE(wordSet.capacity() == 11);
+    REQUIRE(wordSet.size() == 1);
+
+    wordSet.insert("dbc");
+    REQUIRE(wordSet.capacity() == 11);
+    REQUIRE(wordSet.size() == 1);
+}
+
+TEST_CASE("Table:MultiInsertWithRemove:ExpectSmallerSizeAfterErase",
+          "[Complex][Table][Remove]") {
+    const static size_t INITIAL_CAPACITY = 11;
+    proj3::WordSet wordSet(INITIAL_CAPACITY);
+    wordSet.insert("sleepy");
+    wordSet.insert("happy");
+    wordSet.insert("dopey");
+    wordSet.insert("sneezy");
+    wordSet.insert("datalink");
+    wordSet.insert("australia");
+    wordSet.insert("guacamole");
+    wordSet.insert("phylum");
+    REQUIRE(wordSet.contains("happy"));
+    REQUIRE(wordSet.contains("dopey"));
+    wordSet.insert("salsa");
+    wordSet.insert("sloth");
+    wordSet.insert("colossus");
+    wordSet.insert("synergize");
+    wordSet.insert("monday");
+    wordSet.insert("tuesday");
+    wordSet.insert("wednesday");
+    wordSet.insert("thursday");
+    wordSet.insert("friday");
+    wordSet.insert("saturday");
+    wordSet.insert("sunday");
+    REQUIRE(wordSet.contains("monday"));
+    REQUIRE(wordSet.contains("sneezy"));
+    REQUIRE(wordSet.contains("colossus"));
+    REQUIRE(wordSet.capacity() == 23);
+    REQUIRE(wordSet.size() == 19);
+    wordSet.erase("happy"); 
+    wordSet.erase("colossus"); 
+    wordSet.erase("monday"); 
+    wordSet.erase("Someone"); 
+    REQUIRE(wordSet.size() == 16);
+    REQUIRE_FALSE(wordSet.contains("happy"));
+    REQUIRE_FALSE(wordSet.contains("colossus"));
+    REQUIRE_FALSE(wordSet.contains("monday"));
+}
+
 }  // namespace
